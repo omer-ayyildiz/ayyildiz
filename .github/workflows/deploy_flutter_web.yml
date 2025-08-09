@@ -2,8 +2,8 @@ name: Deploy Flutter Web to GitHub Pages
 
 on:
   push:
-    branches: [main] # kodu main'e itince deploy et
-  workflow_dispatch: # gerekirse manuel tetikleme
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -21,15 +21,14 @@ jobs:
           channel: beta
           flutter-version: "3.35.0-0.2.pre"
 
-      #  alternatif: flutter-version-file: pubspec.yaml
-
       - name: Flutter pub get
         run: flutter pub get
 
       - name: Build web
         run: |
-          flutter build web --release --base-href="ayyildiz/" 
-          cp build/web/index.html build/web/404.html   # SPA refresh fix
+          flutter clean
+          flutter build web --release --base-href="/ayyildiz/" --pwa-strategy=none
+          cp build/web/index.html build/web/404.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
